@@ -28,6 +28,14 @@ struct Wallet {
 
     int                     elligible_for_loan;
     struct Loan **          loans; // 3 loans maximum
+
+    struct Wallet *         next;
+};
+
+struct WalletList {
+/*  TYPE                    MEMBER                  */
+    struct Wallet *         head;
+    struct Wallet *         tail;
 };
 
 struct Stock {
@@ -46,6 +54,11 @@ struct Stock {
     struct Stock *          next; // Linked list
 };
 
+struct StockList {
+    struct Stock *          head;
+    struct Stock *          tail;
+};
+
 struct Portfolio {
 /*  TYPE                    MEMBER                  */
     struct PortfolioStock * stocks;
@@ -57,7 +70,14 @@ struct PortfolioStock {
     char *                  name;
     char *                  sym;
     unsigned                owned_shares;
+
     struct PortfolioStock * next; // Linked list
+};
+
+struct PFStockList {
+/*  TYPE                    MEMBER                  */
+    struct PortfolioStock * head;
+    struct PortfolioStock * tail;
 };
 
 struct Market {
@@ -66,6 +86,14 @@ struct Market {
     unsigned                n_stocks;
 
     int                     u_speed; // update speed
+
+    struct Market *         next;
+};
+
+struct MarketList {
+/*  TYPE                    MEMBER                  */
+    struct Market *         head;
+    struct Market *         tail;
 };
 
 struct Loan {
@@ -73,26 +101,32 @@ struct Loan {
     unsigned                amount;
     unsigned                fulfilled;
     time_t                  deadline;
+
+    struct Loan *           next;
+};
+
+struct LoanList {
+/*  TYPE                    MEMBER                  */
+    struct Loan *           head;
+    struct Loan *           tail;
 };
 
 struct Wallet *wallets;
 
-double generate_value();
-
 // Market
 /*  TYPE                    MEMBER                  */
-    struct Market         * m_init(struct Stock *avail_stocks, 
+    struct Market *         m_init(struct Stock *avail_stocks, 
                                    unsigned n_stocks, const int u_speed);
     void                    m_display_ticker(const struct Market *m);
     void                    m_add_stock(struct Market *m, struct Stock *stk);
     void                    m_remove_stock(struct Market *m, const char *sym);
     void                    m_update_stock(struct Market *m, const struct Stock *stk_src);
-    struct Stock          * m_find_stock(const struct Market *m, const char *sym);
-    struct Market         * m_destroy(struct Market *m);
+    struct Stock *          m_find_stock(const struct Market *m, const char *sym);
+    struct Market *         m_destroy(struct Market *m);
 
 // Stock
 /*  TYPE                    MEMBER                  */
-    struct Stock          * s_init(const char *name, const char *sym, const char *sector,
+    struct Stock *          s_init(const char *name, const char *sym, const char *sector,
                                    const double val, const int status, 
                                    const unsigned avail_shares, const unsigned total_shares);
     void                    s_refresh(struct Stock *stk_dest, const struct Stock *stk_src);
@@ -100,7 +134,7 @@ double generate_value();
     double                  s_calc_diff(const double prev, const double curr);
     int                     s_bad_event();
     int                     s_good_event();
-    struct Stock          * s_destroy(struct Stock *stk);
+    struct Stock *          s_destroy(struct Stock *stk);
     void                    s_listall(const struct Stock *stk);
 
 // Wallet
@@ -147,6 +181,7 @@ double generate_value();
     struct Loan *           l_destroy(struct Loan *l);
 
 // General functions
-    void                    print_err_msg(FILE *fp, const char *msg);
+    void                    print_err(FILE *fp, const char *msg);
+    double                  generate_value(); // Value generator
 
 #endif // _STKSIM_H
