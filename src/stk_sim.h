@@ -9,6 +9,9 @@
 #include <string.h>
 #include <time.h>
 
+#include "stk_sim_psht.h"
+#include "stk_sim_stkht.h"
+
 // constexpr int NAME_MAX = 20;
 // constexpr int STOCK_SYMBOL_MAX = 5;
 // constexpr double MAX_BALANCE = DBL_MAX;
@@ -27,7 +30,7 @@ struct Wallet {
     struct Portfolio *      portfolio;
 
     int                     elligible_for_loan;
-    struct Loan **          loans; // 3 loans maximum
+    struct LoanList *       loans; // 3 loans maximum
 
     struct Wallet *         next;
 };
@@ -61,7 +64,7 @@ struct StockList {
 
 struct Portfolio {
 /*  TYPE                    MEMBER                  */
-    struct PortfolioStock * stocks;
+    struct PFStockList *    stocks;
     unsigned                port_size;
 };
 
@@ -82,7 +85,7 @@ struct PFStockList {
 
 struct Market {
 /*  TYPE                    MEMBER                  */
-    struct Stock *          avail_stocks;
+    struct StockList *      avail_stocks;
     unsigned                n_stocks;
 
     int                     u_speed; // update speed
@@ -111,11 +114,12 @@ struct LoanList {
     struct Loan *           tail;
 };
 
-struct Wallet *wallets;
+struct MarketList markets;
+struct WalletList wallets;
 
 // Market
 /*  TYPE                    MEMBER                  */
-    struct Market *         m_init(struct Stock *avail_stocks, 
+    struct Market *         m_init(struct StockList *avail_stocks, 
                                    unsigned n_stocks, const int u_speed);
     void                    m_display_ticker(const struct Market *m);
     void                    m_add_stock(struct Market *m, struct Stock *stk);
@@ -129,6 +133,7 @@ struct Wallet *wallets;
     struct Stock *          s_init(const char *name, const char *sym, const char *sector,
                                    const double val, const int status, 
                                    const unsigned avail_shares, const unsigned total_shares);
+    int                     s_is_full();
     void                    s_refresh(struct Stock *stk_dest, const struct Stock *stk_src);
     void                    s_update(struct Stock *stk_dest, const struct Stock *stk_src);
     double                  s_calc_diff(const double prev, const double curr);
@@ -140,7 +145,7 @@ struct Wallet *wallets;
 // Wallet
 /*  TYPE                    MEMBER                  */
     struct Wallet *         w_init(const char *name, const int bal, struct Portfolio *pf, 
-                                const int elligible_for_loan, struct Loan **loans);
+                                const int elligible_for_loan, struct LoanList *loans);
     void                    w_add_stock(struct Wallet *w, const struct Stock *stk, 
                                         const unsigned shares);
     void                    w_remove_stock(struct Wallet *w, const struct Stock *stk);

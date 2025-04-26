@@ -4,7 +4,7 @@
 #include "stk_sim.h"
 
 struct PFSTOCK_HASHTABLE {
-    struct Stock **stocks_buckets;
+    struct PFStockList **pfs_buckets;
     unsigned capacity;
 };
 

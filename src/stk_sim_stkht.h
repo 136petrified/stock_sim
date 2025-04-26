@@ -4,7 +4,7 @@
 #include "stk_sim.h"
 
 struct STOCK_HASHTABLE {
-    struct Stock **stocks_buckets;
+    struct StockList *stk_buckets;
     unsigned capacity;
 };
 

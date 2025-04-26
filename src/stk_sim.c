@@ -1,5 +1,26 @@
 #include "stk_sim.h"
 
+struct Market * m_init(struct StockList *avail_stocks, unsigned n_stocks, const int u_speed) {
+    struct Market *mkt = (struct Market *) malloc(sizeof(struct Market));
+    mkt->avail_stocks = avail_stocks;
+    mkt->n_stocks = n_stocks;
+    mkt->u_speed = u_speed;
+
+    return mkt;
+}
+
+void m_display_ticker(const struct Market *m) {
+}
+
+void m_add_stock(struct Market *m, struct Stock *stk) {
+    struct Stock *end = m->avail_stocks->tail;      // Keep pointer variable
+    end->next = stk;
+    m->avail_stocks->tail = end->next;
+}
+
+void m_remove_stock(struct Market *m, const char *sym) {
+}
+
 double s_calc_diff(const double prev, const double curr) {
     if (prev == 0) {
         return curr * 100;
