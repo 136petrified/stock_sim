@@ -22,19 +22,19 @@
 
 struct Wallet {
 /*  TYPE                    MEMBER                  */
-    char                *   name;
+    char *                  name;
     double                  bal;
-    struct Portfolio    *   portfolio;
+    struct Portfolio *      portfolio;
 
     int                     elligible_for_loan;
-    struct Loan        **   loans; // 3 loans maximum
+    struct Loan **          loans; // 3 loans maximum
 };
 
 struct Stock {
 /*  TYPE                    MEMBER                  */
-    char                *   name;
-    char                *   sym;
-    char                *   sector;
+    char *                  name;
+    char *                  sym;
+    char *                  sector;
 
     double                  val;
     double                  diff;
@@ -43,7 +43,7 @@ struct Stock {
     unsigned                avail_shares;
     unsigned                total_shares;
 
-    struct Stock *          next;
+    struct Stock *          next; // Linked list
 };
 
 struct Portfolio {
@@ -54,15 +54,15 @@ struct Portfolio {
 
 struct PortfolioStock {
 /*  TYPE                    MEMBER                  */
-    char                  * name;
-    char                  * sym;
+    char *                  name;
+    char *                  sym;
     unsigned                owned_shares;
-    struct PortfolioStock * next;
+    struct PortfolioStock * next; // Linked list
 };
 
 struct Market {
 /*  TYPE                    MEMBER                  */
-    struct Stock          * avail_stocks;
+    struct Stock *          avail_stocks;
     unsigned                n_stocks;
 
     int                     u_speed; // update speed
@@ -105,7 +105,7 @@ double generate_value();
 
 // Wallet
 /*  TYPE                    MEMBER                  */
-    struct Wallet         * w_init(const char *name, const int bal, struct Portfolio *pf, 
+    struct Wallet *         w_init(const char *name, const int bal, struct Portfolio *pf, 
                                 const int elligible_for_loan, struct Loan **loans);
     void                    w_add_stock(struct Wallet *w, const struct Stock *stk, 
                                         const unsigned shares);
@@ -119,19 +119,19 @@ double generate_value();
     void                    w_show_bal(struct Wallet *w);
     inline double           w_get_bal(struct Wallet *w);
     inline void             w_set_bal(struct Wallet *w, const int val);
-    struct Wallet         * w_destroy(struct Wallet *w);
+    struct Wallet *         w_destroy(struct Wallet *w);
 
 // Portfolio
 /*  TYPE                    MEMBER                  */
-    struct Portfolio      * pf_init();
+    struct Portfolio *      pf_init();
     void                    pf_add_stock(struct Portfolio *pf, const struct Stock *stk, 
                                          const unsigned shares);
     void                    pf_remove_stock(struct Portfolio *pf, const char *sym);
     struct PortfolioStock * pf_find_stock(const struct Portfolio *pf, const char *sym);
     void                    pf_update_stock(struct Portfolio *pf, 
                                             const struct PortfolioStock *ps_src);
-    struct Portfolio      * pf_destroy_stocks(struct Portfolio *pf);
-    struct Portfolio      * pf_destroy(struct Portfolio *pf);
+    struct Portfolio *      pf_destroy_stocks(struct Portfolio *pf);
+    struct Portfolio *      pf_destroy(struct Portfolio *pf);
 
 // PortfolioStock
 /*  TYPE                    MEMBER                  */
@@ -142,9 +142,9 @@ double generate_value();
 
 // Loan
 /*  TYPE                    MEMBER                  */
-    struct Loan           * l_init(const unsigned amount, const unsigned fulfilled, 
+    struct Loan *           l_init(const unsigned amount, const unsigned fulfilled, 
                                    const time_t deadline);
-    struct Loan           * l_destroy(struct Loan *l);
+    struct Loan *           l_destroy(struct Loan *l);
 
 // General functions
     void                    print_err_msg(FILE *fp, const char *msg);

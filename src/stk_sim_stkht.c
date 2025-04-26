@@ -1,4 +1,4 @@
-#include "stk_sim_stockht.h"
+#include "stk_sim_stkht.h"
 
 struct STOCK_HASHTABLE * STOCK_HASHTABLE_init(const unsigned capacity) {
     struct STOCK_HASHTABLE *table = (struct STOCK_HASHTABLE *) malloc(sizeof(struct STOCK_HASHTABLE));
