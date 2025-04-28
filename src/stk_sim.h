@@ -22,6 +22,7 @@
 #define                     STOCK_SYMBOL_MAX        5
 #define                     MAX_BALANCE             DBL_MAX
 #define                     LOAN_MAX                32767
+#define                     ERR_FILE                "./err.txt"
 
 struct Wallet {
 /*  TYPE                    MEMBER                  */
@@ -85,7 +86,7 @@ struct PFStockList {
 
 struct Market {
 /*  TYPE                    MEMBER                  */
-    struct STOCK_HASHTABLE * avail_stocks;
+    struct STOCK_HASHTABLE * avail_stocks;   // Dynamically allocated
     unsigned                n_stocks;
 
     int                     u_speed; // update speed
@@ -116,11 +117,12 @@ struct LoanList {
 
 struct MarketList markets;
 struct WalletList wallets;
+// TODO: Add list init and destroy
 
 // Market
 /*  TYPE                    MEMBER                  */
     struct Market *         m_init(const int u_speed);
-    void                    m_display_ticker(const struct Market *m);
+    void                    m_display_ticker(const struct Market *m); // TODO: Add to event loop
     void                    m_add_stock(struct Market *m, struct Stock *stk);
     void                    m_remove_stock(struct Market *m, const char *sym);
     void                    m_update_stock(struct Market *m, const struct Stock *stk_src);
@@ -187,5 +189,6 @@ struct WalletList wallets;
 // General functions
     void                    print_err(FILE *fp, const char *msg);
     double                  generate_value(); // Value generator
+    char *                  strdup(const char *str); // if < C23
 
 #endif // _STKSIM_H

@@ -1,7 +1,7 @@
 #include "stk_sim.h"
 
 struct Market * m_init(const int u_speed) {
-    struct Market *mkt = (struct Market *) malloc(sizeof(struct Market));
+    struct Market *mkt = (struct Market *) malloc(sizeof(struct Market)); // NOTE: Market allocated here
 
     mkt->avail_stocks = STOCK_HASHTABLE_init(29);
     mkt->n_stocks = 0;
@@ -19,6 +19,30 @@ void m_add_stock(struct Market *m, struct Stock *stk) {
 }
 
 void m_remove_stock(struct Market *m, const char *sym) {
+    m->avail_stocks = STOCK_HASHTABLE_remove(m->avail_stocks, sym);
+    --m->n_stocks;
+}
+
+void m_update_stock(struct Market *m, const struct Stock *stk_src) {
+    struct Stock *stk_dest = m_find_stock(m, stk_src->sym);
+
+    if (stk_dest == NULL) {
+        print_err(ERR_FILE, "m_update_stock(): Could not find stock");
+        return;
+    }
+
+    s_update(stk_dest, stk_src);
+}
+
+struct Stock * m_find_stock(const struct Market *m, const char *sym) {
+    return STOCK_HASHTABLE_find(m->avail_stocks, sym);
+}
+
+struct Market * m_destroy(struct Market *m) {
+    m->avail_stocks = STOCK_HASHTABLE_destroy(m->avail_stocks);
+    free(m);
+
+    return NULL;
 }
 
 double s_calc_diff(const double prev, const double curr) {
