@@ -1,9 +1,10 @@
 #include "stk_sim.h"
 
-struct Market * m_init(struct StockList *avail_stocks, unsigned n_stocks, const int u_speed) {
+struct Market * m_init(const int u_speed) {
     struct Market *mkt = (struct Market *) malloc(sizeof(struct Market));
-    mkt->avail_stocks = avail_stocks;
-    mkt->n_stocks = n_stocks;
+
+    mkt->avail_stocks = STOCK_HASHTABLE_init(29);
+    mkt->n_stocks = 0;
     mkt->u_speed = u_speed;
 
     return mkt;
@@ -13,9 +14,8 @@ void m_display_ticker(const struct Market *m) {
 }
 
 void m_add_stock(struct Market *m, struct Stock *stk) {
-    struct Stock *end = m->avail_stocks->tail;      // Keep pointer variable
-    end->next = stk;
-    m->avail_stocks->tail = end->next;
+    m->avail_stocks = STOCK_HASHTABLE_insert(m->avail_stocks, stk);
+    ++m->n_stocks;
 }
 
 void m_remove_stock(struct Market *m, const char *sym) {

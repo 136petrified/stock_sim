@@ -51,8 +51,8 @@ struct Stock {
     double                  diff;
 
     int                     status;
-    unsigned                avail_shares;
-    unsigned                total_shares;
+    unsigned                n_avail_shares;
+    unsigned                n_total_shares;
 
     struct Stock *          next; // Linked list
 };
@@ -64,8 +64,8 @@ struct StockList {
 
 struct Portfolio {
 /*  TYPE                    MEMBER                  */
-    struct PFStockList *    stocks;
-    unsigned                port_size;
+    struct PFSTOCK_HASHTABLE * stocks;
+    unsigned                n_pfstocks;
 };
 
 struct PortfolioStock {
@@ -85,7 +85,7 @@ struct PFStockList {
 
 struct Market {
 /*  TYPE                    MEMBER                  */
-    struct StockList *      avail_stocks;
+    struct STOCK_HASHTABLE * avail_stocks;
     unsigned                n_stocks;
 
     int                     u_speed; // update speed
@@ -119,8 +119,7 @@ struct WalletList wallets;
 
 // Market
 /*  TYPE                    MEMBER                  */
-    struct Market *         m_init(struct StockList *avail_stocks, 
-                                   unsigned n_stocks, const int u_speed);
+    struct Market *         m_init(const int u_speed);
     void                    m_display_ticker(const struct Market *m);
     void                    m_add_stock(struct Market *m, struct Stock *stk);
     void                    m_remove_stock(struct Market *m, const char *sym);
@@ -132,7 +131,7 @@ struct WalletList wallets;
 /*  TYPE                    MEMBER                  */
     struct Stock *          s_init(const char *name, const char *sym, const char *sector,
                                    const double val, const int status, 
-                                   const unsigned avail_shares, const unsigned total_shares);
+                                   const unsigned n_avail_shares, const unsigned n_total_shares);
     int                     s_is_full();
     void                    s_refresh(struct Stock *stk_dest, const struct Stock *stk_src);
     void                    s_update(struct Stock *stk_dest, const struct Stock *stk_src);
