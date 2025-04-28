@@ -187,7 +187,7 @@ struct WalletList wallets;
     struct Loan *           l_destroy(struct Loan *l);
 
 // General functions
-    void                    print_err(FILE *fp, const char *msg);
+    void                    print_err(const char *file, const char *msg);
     double                  generate_value(); // Value generator
     char *                  strdup(const char *str); // if < C23
 
