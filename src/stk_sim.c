@@ -66,6 +66,7 @@ const unsigned n_avail_shares, const unsigned n_total_shares) {
     stk->val            = val;
     stk->n_avail_shares = n_avail_shares;
     stk->n_total_shares = n_total_shares;
+    stk->next           = NULL;
 
     return stk;
 }
@@ -88,6 +89,33 @@ int s_good_event() {
     srand((time(NULL)));  // random seed
     int rval = rand();
     return rval % 103 == 0;
+}
+
+struct Stock * s_destroy(struct Stock *stk) {
+    free(stk->name);
+    free(stk->sym);
+    free(stk->sector);
+
+    free(stk);
+    return NULL;
+}
+
+struct Wallet * w_init(const char *name, const int bal, struct Portfolio *pf,
+const int elligible_for_loan, struct LoanList *loans) {
+    struct Wallet *wal = (struct Wallet *) malloc(sizeof(struct Wallet)); // Dynamically allocated
+
+    wal->name               = strdup(name); // Dynamially allocated string, free required
+    wal->bal                = bal;
+    wal->portfolio          = pf;           // Free required
+    wal->elligible_for_loan = elligible_for_loan;
+    wal->loans              = loans;        // Free required
+    wal->next               = NULL;         // Dealloc is already called for this
+
+    return wal;
+}
+
+struct Wallet * w_destroy(struct Wallet *w) {
+    return NULL; // TODO: Add insert, find, remove for lists
 }
 
 double generate_value() {

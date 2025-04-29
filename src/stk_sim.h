@@ -140,8 +140,8 @@ struct WalletList wallets;
     double                  s_calc_diff(const double prev, const double curr);
     int                     s_bad_event();
     int                     s_good_event();
-    struct Stock *          s_destroy(struct Stock *stk);
     void                    s_listall(const struct Stock *stk);
+    struct Stock *          s_destroy(struct Stock *stk);
 
 // Wallet
 /*  TYPE                    MEMBER                  */
