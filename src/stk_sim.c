@@ -70,6 +70,10 @@ const unsigned n_avail_shares, const unsigned n_total_shares) {
     return stk;
 }
 
+int s_is_full() {
+    return 0; // TODO: Put empty/full funcs in hashtable header
+}
+
 double s_calc_diff(const double prev, const double curr) {
     if (prev == 0) {
         return curr * 100;
