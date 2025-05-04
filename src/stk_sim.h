@@ -86,6 +86,9 @@ struct PFStockList {
 
 struct Market {
 /*  TYPE                        MEMBER                  */
+	char *						name;
+
+	int							max_stocks;
     struct STOCK_HASHTABLE *    avail_stocks;   // Dynamically allocated
     unsigned                    n_stocks;
 
@@ -129,6 +132,14 @@ struct WalletList wallets;
     struct Stock *              m_find_stock(const struct Market *m, const char *sym);
     struct Market *             m_destroy(struct Market *m);
 
+// MarketList
+/*  TYPE                        MEMBER                  */
+    struct MarketList *         mlist_init();
+	void						mlist_insert(struct Market *mlist);
+	struct MarketList *			mlist_find(struct Market *mlist, const char *name);
+	void						mlist_remove(struct Market *mlist);
+    struct MarketList *         mlist_destroy(struct Market *mlist);
+
 // Stock
 /*  TYPE                        MEMBER                  */
     struct Stock *              s_init(const char *name, const char *sym, const char *sector,
@@ -142,6 +153,11 @@ struct WalletList wallets;
     int                         s_good_event();
     void                        s_listall(const struct Stock *stk);
     struct Stock *              s_destroy(struct Stock *stk);
+
+// LoanList
+/*  TYPE                        MEMBER                  */
+    struct StockList *          slist_init();
+    struct StockList *          slist_destroy();
 
 // Wallet
 /*  TYPE                        MEMBER                  */
@@ -160,6 +176,10 @@ struct WalletList wallets;
     inline double               w_get_bal(struct Wallet *w);
     inline void                 w_set_bal(struct Wallet *w, const int val);
     struct Wallet *             w_destroy(struct Wallet *w);
+
+// WalletList
+    struct WalletList *         wl_init();
+    struct WalletList *         wl_destroy(struct WalletList *wlist);
 
 // Portfolio
 /*  TYPE                        MEMBER                  */
@@ -180,11 +200,21 @@ struct WalletList wallets;
                                                 const struct PortfolioStock *ps_src);
     struct PortfolioStock *     ps_destroy(struct PortfolioStock *ps);
 
+// PFStockList
+/*  TYPE                        MEMBER                  */
+	struct PFStockList *		pfslist_init();
+	struct PFStockList *		pfslist_destroy();
+
 // Loan
 /*  TYPE                        MEMBER                  */
     struct Loan *               l_init(const unsigned amount, const unsigned fulfilled, 
                                        const time_t deadline);
     struct Loan *               l_destroy(struct Loan *l);
+
+// LoanList
+/*  TYPE                        MEMBER                  */
+	struct LoanList *           llist_init();
+	struct LoanList *           llist_destroy();
 
 // General functions
 /*  TYPE                        MEMBER                  */
