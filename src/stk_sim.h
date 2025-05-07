@@ -233,8 +233,8 @@ struct LoanParam{
     struct Loan *               next;
 };
 
-struct MarketList markets;
-struct WalletList wallets;
+// static struct MarketList markets;
+// static struct WalletList wallets;
 
 // TODO: REDO .c
 // TODO: Add list insert/remove for lists
