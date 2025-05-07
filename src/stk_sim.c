@@ -22,7 +22,6 @@ void stk_sim_loop() {
 }
 
 double generate_value() {
-    srand(time(NULL));
     uint64_t ct = (uint64_t) time(NULL);
     unsigned mask = 0x7F;
     unsigned offset = (unsigned) ((~ct ^ mask) & mask);
@@ -33,4 +32,17 @@ double generate_value() {
     double x = rand() % 43;
 
     return a * sin(b * x + c);
+}
+
+char * strdup(const char *str) {
+    int buflen = strlen(str) + 1;
+    char *new_str = (char *) malloc(buflen);
+
+    if (new_str == NULL) {
+        print_err(ERR_FILE, "strdup(): malloc() failed\n");
+        return NULL;
+    }
+
+    strcpy(new_str, str);
+    return new_str;
 }

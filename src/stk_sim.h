@@ -50,6 +50,8 @@ constexpr const char        ERR_FILE []           = "./err.txt";
 #define                     ERR_FILE                "./err.txt"
 */ // This can be turned on if STDC_VERSION < C23
 
+enum sectors {
+
 struct Wallet {
 /*  TYPE                        MEMBER                  */
     char *                      name;
