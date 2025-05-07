@@ -24,8 +24,10 @@ struct PortfolioStock;
 struct PFSTockList;
 struct Market;
 struct MarketList;
+struct MarketParam;
 struct Loan;
 struct LoanList;
+struct LoanParam;
 
 #include "stk_sim_psht.h"
 #include "stk_sim_stkht.h"
@@ -177,6 +179,19 @@ struct MarketList {
     int                         size;
 };
 
+struct MarketParam {
+    char *						name;
+
+	int							max_stocks;
+    struct STOCK_HASHTABLE *    avail_stocks;   // Dynamically allocated
+    unsigned                    n_stocks;
+
+    int                         u_speed; // update speed
+    bool                        is_open; // if open
+
+    struct Market *             next;
+};
+
 struct Loan {
 /*  TYPE                        MEMBER                  */
     char *                      name;
@@ -198,6 +213,22 @@ struct LoanList {
     struct Loan *               head;
     struct Loan *               tail;
     int                         size;
+};
+
+struct LoanParam{
+/*  TYPE                        MEMBER                  */
+    char *                      name;
+
+    double                      principal;
+    double                      interest;
+
+    double                      total;
+    unsigned                    fulfilled;
+
+    unsigned                    req_score;
+    time_t                      deadline;
+
+    struct Loan *               next;
 };
 
 struct MarketList markets;
