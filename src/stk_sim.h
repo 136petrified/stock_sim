@@ -50,7 +50,7 @@ constexpr const char        ERR_FILE []           = "./err.txt";
 #define                     ERR_FILE                "./err.txt"
 */ // This can be turned on if STDC_VERSION < C23
 
-enum sectors {
+// enum sectors;
 
 struct Wallet {
 /*  TYPE                        MEMBER                  */
@@ -289,7 +289,7 @@ struct WalletList wallets;
 // StockParam
 /*  TYPE                        MEMBER                  */
     struct StockParam *         spm_init();
-    struct StockParam *         spm_destroy(struct StructParam *spm);
+    struct StockParam *         spm_destroy(struct StockParam *spm);
 
 // Wallet
 /*  TYPE                        MEMBER                  */
@@ -344,6 +344,7 @@ struct WalletList wallets;
 // PortfolioStock
 /*  TYPE                        MEMBER                  */
     struct PortfolioStock *     ps_init(const char *name, const char *sym, const unsigned shares);
+    void                        ps_update(struct PortfolioStock *ps);
     void                        ps_update_stock(struct PortfolioStock *ps_dest, 
                                                 const struct PortfolioStock *ps_src);
     struct PortfolioStock *     ps_destroy(struct PortfolioStock *ps);
@@ -360,6 +361,7 @@ struct WalletList wallets;
 /*  TYPE                        MEMBER                  */ // TODO: Introduce scoring system
     struct Loan *               l_init(const unsigned total, const unsigned fulfilled, 
                                        const time_t deadline);
+    void                        l_update(struct Loan *l);
     inline unsigned             l_get_score_req(const struct Loan *l) { return l ? l->req_score : 0; }
     struct Loan *               l_destroy(struct Loan *l);
 
@@ -379,7 +381,7 @@ struct WalletList wallets;
 // General functions
 /*  TYPE                        MEMBER                  */
     void                        print_err(const char *file, const char *msg);
-    inline void                 seed_random() { srand(time(NULL)); }
+    static inline void          seed_random() { srand(time(NULL)); }
     void                        stk_sim_loop(); // NOTE: Must be called or else simulation stops!
     double                      generate_value(); // Value generator
     char *                      strdup(const char *str); // if < C23

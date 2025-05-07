@@ -16,6 +16,8 @@ void print_err(const char *file, const char *msg) {
 
 void stk_sim_loop() {
     // TODO: Implement this
+    seed_random();
+
     while (1) {
         // here...
     }
