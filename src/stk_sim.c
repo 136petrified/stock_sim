@@ -8,6 +8,19 @@ int s_good_event() {
     return rand() % 103 == 0;
 }
 
+void print_err(const char *file, const char *msg) {
+    FILE *fp = fopen(file, "a");
+    fprintf(fp, "%s\n", msg);
+    fclose(fp);
+}
+
+void stk_sim_loop() {
+    // TODO: Implement this
+    while (1) {
+        // here...
+    }
+}
+
 double generate_value() {
     srand(time(NULL));
     uint64_t ct = (uint64_t) time(NULL);

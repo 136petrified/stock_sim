@@ -374,8 +374,6 @@ struct WalletList wallets;
     struct LoanParam *          lpm_init();
     struct LoanParam *          lpm_destroy(struct LoanParam *lpm);
 
-/*  TYPE                        MEMBER                  */
-
 // General functions
 /*  TYPE                        MEMBER                  */
     void                        print_err(const char *file, const char *msg);
