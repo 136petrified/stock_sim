@@ -334,7 +334,7 @@ struct WalletList wallets;
 
 // PFStockList
 /*  TYPE                        MEMBER                  */
-	struct PFStockList *		pfsl_init();
+	struct PFStockList *	    pfsl_init();
     void                        pfsl_insert(struct PFStockList *pfsl, struct PortfolioStock *pfs);
     struct PortfolioStock *     pfsl_find(struct PFStockList *pfsl, const char *sym);
     void                        pfsl_remove(struct PFStockList *pfsl, const char *sym);
