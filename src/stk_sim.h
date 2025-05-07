@@ -19,6 +19,7 @@ struct Stock;
 struct StockList;
 struct StockParam;
 struct Portfolio;
+struct PFList;
 struct PortfolioStock;
 struct PFSTockList;
 struct Market;
@@ -126,8 +127,17 @@ struct StockParam { // alias spm
 
 struct Portfolio {
 /*  TYPE                        MEMBER                  */
+    char *                      name;
+
     struct PFSTOCK_HASHTABLE *  stocks;
     unsigned                    n_pfstocks;
+};
+
+struct PFList {
+/*  TYPE                        MEMBER                  */
+    struct Portfolio *          head;
+    struct Portfolio *          tail;
+    int                         size;
 };
 
 struct PortfolioStock {
@@ -224,7 +234,7 @@ struct WalletList wallets;
     struct Stock *              s_init(const struct StockParam *spm);
     int                         s_is_full();
     void                        s_refresh(struct Stock *stk_dest, const struct Stock *stk_src);
-    void                        s_update(struct Stock *stk_dest, const struct Stock *stk_src);
+    void                        s_update(struct Stock *stk_dest, const struct StockParam *spm);
     double                      s_get_percent(const double prev, const double curr);
     int                         s_bad_event();
     int                         s_good_event();
@@ -235,9 +245,9 @@ struct WalletList wallets;
 /*  TYPE                        MEMBER                  */
     struct StockList *          sl_init();
     void                        sl_insert(struct StockList *sl, struct Stock *stk);
-    void                        sl_find(struct StockList *sl, struct Stock *stk);
-    void                        sl_remove();
-    struct StockList *          sl_destroy();
+    struct Stock *              sl_find(struct StockList *sl, const char *sym);
+    void                        sl_remove(struct StockList *sl, const char *sym);
+    struct StockList *          sl_destroy(struct StockList *sl);
 
 // Wallet
 /*  TYPE                        MEMBER                  */
@@ -254,11 +264,14 @@ struct WalletList wallets;
     void                        w_show_bal(struct Wallet *w);
     inline double               w_get_bal(struct Wallet *w) { return w ? w->bal : -1; }
     inline void                 w_set_bal(struct Wallet *w, const int val) { w->bal = val; }
-    void                        w_update(); // TODO: Implement this
+    void                        w_update(struct Wallet *w, const struct WalletParam *wpm); // TODO: Implement this
     struct Wallet *             w_destroy(struct Wallet *w);
 
 // WalletList
     struct WalletList *         wl_init();
+    void                        wl_insert(struct WalletList *wl, struct Wallet *w);
+    struct Wallet *             wl_find(struct WalletList *wl, const char *name);
+    void                        wl_remove(struct WalletList *wl, const char *name);
     struct WalletList *         wl_destroy(struct WalletList *wl);
 
 // Portfolio
@@ -273,6 +286,14 @@ struct WalletList wallets;
     struct Portfolio *          pf_destroy_stocks(struct Portfolio *pf);
     struct Portfolio *          pf_destroy(struct Portfolio *pf);
 
+// PortfolioList
+/*  TYPE                        MEMBER                  */
+    struct PFList *		        pfl_init();
+    void                        pfl_insert(struct PFList *pfl, struct Portfolio *pf);
+    struct PortfolioStock *     pfl_find(struct PFList *pfl, const char *name);
+    void                        pfl_remove(struct PFList *pfl, const char *namw);
+    struct PFList *		        pfl_destroy(struct PFList *pfl);
+
 // PortfolioStock
 /*  TYPE                        MEMBER                  */
     struct PortfolioStock *     ps_init(const char *name, const char *sym, const unsigned shares);
@@ -283,7 +304,10 @@ struct WalletList wallets;
 // PFStockList
 /*  TYPE                        MEMBER                  */
 	struct PFStockList *		pfsl_init();
-	struct PFStockList *		pfsl_destroy();
+    void                        pfsl_insert(struct PFStockList *pfsl, struct PortfolioStock *pfs);
+    struct PortfolioStock *     pfsl_find(struct PFStockList *pfsl, const char *sym);
+    void                        pfsl_remove(struct PFStockList *pfsl, const char *sym);
+	struct PFStockList *		pfsl_destroy(struct PFStockList *pfsl);
 
 // Loan
 /*  TYPE                        MEMBER                  */ // TODO: Introduce scoring system
@@ -295,12 +319,15 @@ struct WalletList wallets;
 // LoanList
 /*  TYPE                        MEMBER                  */
 	struct LoanList *           ll_init();
-	struct LoanList *           ll_destroy();
+    void                        ll_insert(struct LoanList *ll, struct Loan *l);
+    struct LoanList *           ll_find(struct LoanList *ll, const char *name);
+    void                        ll_remove(struct LoanList *ll, const char *name);
+	struct LoanList *           ll_destroy(struct LoanList *ll);
 
 // General functions
 /*  TYPE                        MEMBER                  */
     void                        print_err(const char *file, const char *msg);
-    void                        seed_random();
+    inline void                 seed_random() { srand(time(NULL)); }
     void                        stk_sim_loop(); // NOTE: Must be called or else simulation stops!
     double                      generate_value(); // Value generator
     char *                      strdup(const char *str); // if < C23
