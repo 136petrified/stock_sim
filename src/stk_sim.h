@@ -260,6 +260,10 @@ struct WalletList wallets;
 	void						ml_remove(struct MarketList *ml, const char *name);
     struct MarketList *         ml_destroy(struct MarketList *ml);
 
+// MarketParam
+    struct MarketParam *        mpm_init();
+    struct MarketParam *        mpm_destroy(struct MarketParam *mpm);
+
 // Stock
 /*  TYPE                        MEMBER                  */
     struct Stock *              s_init(const struct StockParam *spm);
@@ -269,16 +273,21 @@ struct WalletList wallets;
     double                      s_get_percent(const double prev, const double curr);
     int                         s_bad_event();
     int                         s_good_event();
-    void                        s_listall();
+    void                        s_print();
     struct Stock *              s_destroy(struct Stock *stk);
 
-// LoanList
+// StockList
 /*  TYPE                        MEMBER                  */
     struct StockList *          sl_init();
     void                        sl_insert(struct StockList *sl, struct Stock *stk);
     struct Stock *              sl_find(struct StockList *sl, const char *sym);
     void                        sl_remove(struct StockList *sl, const char *sym);
     struct StockList *          sl_destroy(struct StockList *sl);
+
+// StockParam
+/*  TYPE                        MEMBER                  */
+    struct StockParam *         spm_init();
+    struct StockParam *         spm_destroy(struct StructParam *spm);
 
 // Wallet
 /*  TYPE                        MEMBER                  */
@@ -304,6 +313,11 @@ struct WalletList wallets;
     struct Wallet *             wl_find(struct WalletList *wl, const char *name);
     void                        wl_remove(struct WalletList *wl, const char *name);
     struct WalletList *         wl_destroy(struct WalletList *wl);
+
+// WalletParam
+/*  TYPE                        MEMBER                  */
+    struct WalletParam *        wpm_init();
+    struct WalletParam *        wpm_destroy(struct WalletParam *wpm);
 
 // Portfolio
 /*  TYPE                        MEMBER                  */
@@ -354,6 +368,13 @@ struct WalletList wallets;
     struct LoanList *           ll_find(struct LoanList *ll, const char *name);
     void                        ll_remove(struct LoanList *ll, const char *name);
 	struct LoanList *           ll_destroy(struct LoanList *ll);
+
+// LoanParam
+/*  TYPE                        MEMBER                  */
+    struct LoanParam *          lpm_init();
+    struct LoanParam *          lpm_destroy(struct LoanParam *lpm);
+
+/*  TYPE                        MEMBER                  */
 
 // General functions
 /*  TYPE                        MEMBER                  */
