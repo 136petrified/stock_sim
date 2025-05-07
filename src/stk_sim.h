@@ -9,20 +9,29 @@
 #include <string.h>
 #include <time.h>
 
+struct PortfolioStock;
+struct Stock;
+
 #include "stk_sim_psht.h"
 #include "stk_sim_stkht.h"
 
-// constexpr int NAME_MAX = 20;
-// constexpr int STOCK_SYMBOL_MAX = 5;
-// constexpr double MAX_BALANCE = DBL_MAX;
-// constexpr int LOAN_MAX = 32767;
+/*                          CONSTANT                VALUE */
+constexpr int               NAME_MAX              = 20;
+constexpr int               STOCK_SYMBOL_MAX      = 5;
+constexpr double            MAX_BALANCE           = DBL_MAX;
+constexpr int               LOAN_MAX              = 32767; // placeholder, TODO: make some function to calculate loans based on score
+constexpr const char        ERR_FILE []           = "./err.txt";
+
+// TODO: Merge all files to resolve linking errors
 
 /*                          CONSTANT                VALUE */
+/*
 #define                     NAME_MAX                20
 #define                     STOCK_SYMBOL_MAX        5
 #define                     MAX_BALANCE             DBL_MAX
 #define                     LOAN_MAX                32767
 #define                     ERR_FILE                "./err.txt"
+*/
 
 struct Wallet {
 /*  TYPE                        MEMBER                  */
@@ -157,6 +166,9 @@ struct WalletList wallets;
 // LoanList
 /*  TYPE                        MEMBER                  */
     struct StockList *          slist_init();
+    void                        slist_insert();
+    void                        slist_find();
+    void                        slist_remove();
     struct StockList *          slist_destroy();
 
 // Wallet
