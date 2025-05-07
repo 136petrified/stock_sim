@@ -36,7 +36,7 @@ struct LoanParam;
 constexpr int               NAME_MAX              = 20;
 constexpr int               STOCK_SYMBOL_MAX      = 5;
 constexpr double            MAX_BALANCE           = DBL_MAX;
-constexpr int               LOAN_MAX              = 32767; // placeholder, TODO: make some function to calculate loans based on score
+constexpr unsigned          LOAN_MAX              = UINT_MAX; // placeholder, TODO: make some function to calculate loans based on score
 constexpr const char        ERR_FILE []           = "./err.txt";
 
 // TODO: Merge all files to resolve linking errors
@@ -46,7 +46,7 @@ constexpr const char        ERR_FILE []           = "./err.txt";
 #define                     NAME_MAX                20
 #define                     STOCK_SYMBOL_MAX        5
 #define                     MAX_BALANCE             DBL_MAX
-#define                     LOAN_MAX                32767
+#define                     LOAN_MAX                UINT_MAX
 #define                     ERR_FILE                "./err.txt"
 */ // This can be turned on if STDC_VERSION < C23
 
