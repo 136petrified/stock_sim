@@ -3,6 +3,7 @@
 
 #include <float.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -39,8 +40,9 @@ struct Wallet {
     double                      bal;
     struct Portfolio *          portfolio;
 
-    int                         elligible_for_loan;
+    bool                        elligible_for_loan;
     struct LoanList *           loans; // 3 loans maximum
+    unsigned                    loan_score;
 
     struct Wallet *             next;
 };
@@ -59,6 +61,7 @@ struct Stock {
 
     double                      val;
     double                      diff;
+    double                      percentage;
 
     int                         status;
     unsigned                    n_avail_shares;
@@ -102,6 +105,7 @@ struct Market {
     unsigned                    n_stocks;
 
     int                         u_speed; // update speed
+    bool                        is_open; // if open
 
     struct Market *             next;
 };
@@ -117,6 +121,7 @@ struct Loan {
     unsigned                    amount;
     unsigned                    fulfilled;
     time_t                      deadline;
+    unsigned                    req_score;
 
     struct Loan *               next;
 };
@@ -129,11 +134,13 @@ struct LoanList {
 
 struct MarketList markets;
 struct WalletList wallets;
-// TODO: Add list init and destroy
+
+// TODO: Add list insert/remove for lists
+// TODO: Update all init() funcs
 
 // Market
 /*  TYPE                        MEMBER                  */
-    struct Market *             m_init(const int u_speed);
+    struct Market *             m_init(const char *name, const int max_stocks, const int u_speed);
     void                        m_display_ticker(const struct Market *m); // TODO: Add to event loop
     void                        m_add_stock(struct Market *m, struct Stock *stk);
     void                        m_remove_stock(struct Market *m, const char *sym);
@@ -174,7 +181,7 @@ struct WalletList wallets;
 // Wallet
 /*  TYPE                        MEMBER                  */
     struct Wallet *             w_init(const char *name, const int bal, struct Portfolio *pf, 
-                                       const int elligible_for_loan, struct LoanList *loans);
+                                       const bool elligible_for_loan, struct LoanList *loans);
     void                        w_add_stock(struct Wallet *w, const struct Stock *stk, 
                                             const unsigned shares);
     void                        w_remove_stock(struct Wallet *w, const struct Stock *stk);
@@ -185,8 +192,8 @@ struct WalletList wallets;
     void                        w_sell(struct Wallet *w, const char *sym, const unsigned shares);
     void                        w_sellall(struct Wallet *w, const char *sym);
     void                        w_show_bal(struct Wallet *w);
-    inline double               w_get_bal(struct Wallet *w);
-    inline void                 w_set_bal(struct Wallet *w, const int val);
+    inline double               w_get_bal(struct Wallet *w) { return w ? w->bal : -1; }
+    inline void                 w_set_bal(struct Wallet *w, const int val) { w->bal = val; }
     struct Wallet *             w_destroy(struct Wallet *w);
 
 // WalletList
@@ -218,9 +225,10 @@ struct WalletList wallets;
 	struct PFStockList *		pfslist_destroy();
 
 // Loan
-/*  TYPE                        MEMBER                  */
+/*  TYPE                        MEMBER                  */ // TODO: Introduce scoring system
     struct Loan *               l_init(const unsigned amount, const unsigned fulfilled, 
                                        const time_t deadline);
+    inline unsigned             l_get_score_req(const struct Loan *l) { return l ? l->req_score : 0; }
     struct Loan *               l_destroy(struct Loan *l);
 
 // LoanList

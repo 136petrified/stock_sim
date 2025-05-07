@@ -1,12 +1,14 @@
 #include "stk_sim.h"
 
-struct Market * m_init(const int u_speed) {
+struct Market * m_init(const char *name, const int max_stocks,const int u_speed) { // TODO: Update this
     struct Market *mkt = (struct Market *) malloc(sizeof(struct Market)); // NOTE: Market allocated here
 
     if (mkt == NULL) {
         print_err(ERR_FILE, "m_init(): Failed to allocate memory");
         return NULL;
     }
+
+    m->name = strdup(name); // Dynamically allocated
 
     mkt->avail_stocks = STOCK_HASHTABLE_init(29);
     mkt->n_stocks = 0;
@@ -23,7 +25,7 @@ void m_add_stock(struct Market *m, struct Stock *stk) {
     ++m->n_stocks;
 }
 
-void m_remove_stock(struct Market *m, const char *sym) {
+void m_remove_stock(struct Market *m, const char *sym) { // TODO::Error check later
     STOCK_HASHTABLE_remove(m->avail_stocks, sym);
     --m->n_stocks;
 }
@@ -45,6 +47,7 @@ struct Stock * m_find_stock(const struct Market *m, const char *sym) {
 
 struct Market * m_destroy(struct Market *m) {
     m->avail_stocks = STOCK_HASHTABLE_destroy(m->avail_stocks); // avail_stocks is NULL
+    free(m->name);
     free(m);
 
     return NULL;
@@ -126,7 +129,7 @@ struct Stock * s_destroy(struct Stock *stk) {
 }
 
 struct Wallet * w_init(const char *name, const int bal, struct Portfolio *pf,
-const int elligible_for_loan, struct LoanList *loans) {
+const bool elligible_for_loan, struct LoanList *loans) {
     struct Wallet *wal = (struct Wallet *) malloc(sizeof(struct Wallet)); // Dynamically allocated
 
     wal->name               = strdup(name); // Dynamially allocated string, free required
@@ -149,10 +152,10 @@ double generate_value() {
     unsigned mask = 0x7F;
     unsigned offset = (unsigned) ((~ct ^ mask) & mask);
 
-    double a = (1 + (rand() % 10)) * (rand() % 2 ? -1.0 : 1.0);
-    double b = ((1 + (rand() % 10)) / 10) * (rand() % 2 ? -1.0 : 1.0);
+    double a = (1 + (rand() % 14)) * (rand() % 2 ? -1.0 : 1.0);
+    double b = ((1 + (rand() % 43)) / 43) * (rand() % 2 ? -1.0 : 1.0);
     double c = ((rand() + offset) % 64) * (rand() % 2 ? -1.0 : 1.0);
-    double x = rand() % 8;
+    double x = rand() % 43;
 
     return a * sin(b * x + c);
 }
