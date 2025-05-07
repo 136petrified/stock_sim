@@ -10,8 +10,21 @@
 #include <string.h>
 #include <time.h>
 
-struct PortfolioStock;
+/* Forward Declarations */
+
+struct Wallet;
+struct WalletList;
+struct WalletParam;
 struct Stock;
+struct StockList;
+struct StockParam;
+struct Portfolio;
+struct PortfolioStock;
+struct PFSTockList;
+struct Market;
+struct MarketList;
+struct Loan;
+struct LoanList;
 
 #include "stk_sim_psht.h"
 #include "stk_sim_stkht.h"
@@ -32,7 +45,7 @@ constexpr const char        ERR_FILE []           = "./err.txt";
 #define                     MAX_BALANCE             DBL_MAX
 #define                     LOAN_MAX                32767
 #define                     ERR_FILE                "./err.txt"
-*/
+*/ // This can be turned on if STDC_VERSION < C23
 
 struct Wallet {
 /*  TYPE                        MEMBER                  */
@@ -53,6 +66,20 @@ struct WalletList {
     struct Wallet *             tail;
 };
 
+struct WalletParam {
+/*  TYPE                        MEMBER                  */
+    char *                      name;
+    double                      bal;
+    struct Portfolio *          portfolio;
+
+    bool                        elligible_for_loan;
+    struct LoanList *           loans; // 3 loans maximum
+    unsigned                    loan_score;
+
+    struct Wallet *             next;
+};
+
+
 struct Stock {
 /*  TYPE                        MEMBER                  */
     char *                      name;
@@ -67,12 +94,34 @@ struct Stock {
     unsigned                    n_avail_shares;
     unsigned                    n_total_shares;
 
+    char *                      hist; // This is a file name!
+
     struct Stock *              next; // Linked list
 };
 
 struct StockList {
     struct Stock *              head;
     struct Stock *              tail;
+    int                         size;
+};
+
+struct StockParam { // alias spm
+    /*  TYPE                        MEMBER                  */
+    char *                      name;
+    char *                      sym;
+    char *                      sector;
+
+    double                      val;
+    double                      diff;
+    double                      percentage;
+
+    int                         status;
+    unsigned                    n_avail_shares;
+    unsigned                    n_total_shares;
+
+    char *                      hist; // This is a file name!
+
+    struct Stock *              next; // Linked list
 };
 
 struct Portfolio {
@@ -94,6 +143,7 @@ struct PFStockList {
 /*  TYPE                        MEMBER                  */
     struct PortfolioStock *     head;
     struct PortfolioStock *     tail;
+    int                         size;
 };
 
 struct Market {
@@ -114,14 +164,21 @@ struct MarketList {
 /*  TYPE                        MEMBER                  */
     struct Market *             head;
     struct Market *             tail;
+    int                         size;
 };
 
 struct Loan {
 /*  TYPE                        MEMBER                  */
-    unsigned                    amount;
+    char *                      name;
+
+    double                      principal;
+    double                      interest;
+
+    double                      total;
     unsigned                    fulfilled;
-    time_t                      deadline;
+
     unsigned                    req_score;
+    time_t                      deadline;
 
     struct Loan *               next;
 };
@@ -130,13 +187,19 @@ struct LoanList {
 /*  TYPE                        MEMBER                  */
     struct Loan *               head;
     struct Loan *               tail;
+    int                         size;
 };
 
 struct MarketList markets;
 struct WalletList wallets;
 
+// TODO: REDO .c
 // TODO: Add list insert/remove for lists
 // TODO: Update all init() funcs
+// TODO: Look into spaCy and NLTK for sentiment-based changes
+// TODO: Param structs
+// TODO: Look into GUI for ticker, React for iOS, Android? Also webservers + API
+// TODO: Loan scoring system, loan overhaul, overhaul bad / good events
 
 // Market
 /*  TYPE                        MEMBER                  */
@@ -150,38 +213,35 @@ struct WalletList wallets;
 
 // MarketList
 /*  TYPE                        MEMBER                  */
-    struct MarketList *         mlist_init();
-	void						mlist_insert(struct Market *mlist);
-	struct MarketList *			mlist_find(struct Market *mlist, const char *name);
-	void						mlist_remove(struct Market *mlist);
-    struct MarketList *         mlist_destroy(struct Market *mlist);
+    struct MarketList *         ml_init();
+	void						ml_insert(struct MarketList *ml, struct Market *m);
+	struct MarketList *			ml_find(struct MarketList *ml, const char *name);
+	void						ml_remove(struct MarketList *ml, const char *name);
+    struct MarketList *         ml_destroy(struct MarketList *ml);
 
 // Stock
 /*  TYPE                        MEMBER                  */
-    struct Stock *              s_init(const char *name, const char *sym, const char *sector,
-                                       const double val, const int status, 
-                                       const unsigned n_avail_shares, const unsigned n_total_shares);
+    struct Stock *              s_init(const struct StockParam *spm);
     int                         s_is_full();
     void                        s_refresh(struct Stock *stk_dest, const struct Stock *stk_src);
     void                        s_update(struct Stock *stk_dest, const struct Stock *stk_src);
-    double                      s_calc_diff(const double prev, const double curr);
+    double                      s_get_percent(const double prev, const double curr);
     int                         s_bad_event();
     int                         s_good_event();
-    void                        s_listall(const struct Stock *stk);
+    void                        s_listall();
     struct Stock *              s_destroy(struct Stock *stk);
 
 // LoanList
 /*  TYPE                        MEMBER                  */
-    struct StockList *          slist_init();
-    void                        slist_insert();
-    void                        slist_find();
-    void                        slist_remove();
-    struct StockList *          slist_destroy();
+    struct StockList *          sl_init();
+    void                        sl_insert(struct StockList *sl, struct Stock *stk);
+    void                        sl_find(struct StockList *sl, struct Stock *stk);
+    void                        sl_remove();
+    struct StockList *          sl_destroy();
 
 // Wallet
 /*  TYPE                        MEMBER                  */
-    struct Wallet *             w_init(const char *name, const int bal, struct Portfolio *pf, 
-                                       const bool elligible_for_loan, struct LoanList *loans);
+    struct Wallet *             w_init(const struct WalletParam *wpm);
     void                        w_add_stock(struct Wallet *w, const struct Stock *stk, 
                                             const unsigned shares);
     void                        w_remove_stock(struct Wallet *w, const struct Stock *stk);
@@ -194,11 +254,12 @@ struct WalletList wallets;
     void                        w_show_bal(struct Wallet *w);
     inline double               w_get_bal(struct Wallet *w) { return w ? w->bal : -1; }
     inline void                 w_set_bal(struct Wallet *w, const int val) { w->bal = val; }
+    void                        w_update(); // TODO: Implement this
     struct Wallet *             w_destroy(struct Wallet *w);
 
 // WalletList
     struct WalletList *         wl_init();
-    struct WalletList *         wl_destroy(struct WalletList *wlist);
+    struct WalletList *         wl_destroy(struct WalletList *wl);
 
 // Portfolio
 /*  TYPE                        MEMBER                  */
@@ -221,24 +282,26 @@ struct WalletList wallets;
 
 // PFStockList
 /*  TYPE                        MEMBER                  */
-	struct PFStockList *		pfslist_init();
-	struct PFStockList *		pfslist_destroy();
+	struct PFStockList *		pfsl_init();
+	struct PFStockList *		pfsl_destroy();
 
 // Loan
 /*  TYPE                        MEMBER                  */ // TODO: Introduce scoring system
-    struct Loan *               l_init(const unsigned amount, const unsigned fulfilled, 
+    struct Loan *               l_init(const unsigned total, const unsigned fulfilled, 
                                        const time_t deadline);
     inline unsigned             l_get_score_req(const struct Loan *l) { return l ? l->req_score : 0; }
     struct Loan *               l_destroy(struct Loan *l);
 
 // LoanList
 /*  TYPE                        MEMBER                  */
-	struct LoanList *           llist_init();
-	struct LoanList *           llist_destroy();
+	struct LoanList *           ll_init();
+	struct LoanList *           ll_destroy();
 
 // General functions
 /*  TYPE                        MEMBER                  */
     void                        print_err(const char *file, const char *msg);
+    void                        seed_random();
+    void                        stk_sim_loop(); // NOTE: Must be called or else simulation stops!
     double                      generate_value(); // Value generator
     char *                      strdup(const char *str); // if < C23
 

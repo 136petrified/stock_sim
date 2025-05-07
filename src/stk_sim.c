@@ -53,27 +53,6 @@ struct Market * m_destroy(struct Market *m) {
     return NULL;
 }
 
-struct MarketList * mlist_init() {
-    struct MarketList *mlist = (struct Market *) malloc(sizeof(struct MarketList));
-    mlist->head = NULL;
-    mlist->tail = NULL;
-}
-
-struct MarketList * mlist_destroy(struct MarketList *mlist) {
-    struct Market *target;
-    struct Market *curr = mlist;
-
-    while (curr != NULL) {
-        target = curr;
-        curr = curr->next;
-        free(target);
-    }
-
-    free(mlist);
-
-    return NULL;
-}
-
 struct Stock * s_init(const char *name, const char *sym, const char *sector,
 const double val, const int status,
 const unsigned n_avail_shares, const unsigned n_total_shares) {
@@ -97,14 +76,6 @@ const unsigned n_avail_shares, const unsigned n_total_shares) {
 
 int s_is_full() {
     return 0; // TODO: Put empty/full funcs in hashtable header
-}
-
-double s_calc_diff(const double prev, const double curr) {
-    if (prev == 0) {
-        return curr * 100;
-    }
-
-    return (curr / prev - 1) * 100;
 }
 
 int s_bad_event() {
