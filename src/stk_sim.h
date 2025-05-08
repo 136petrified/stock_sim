@@ -164,7 +164,7 @@ struct Market {
 /*  TYPE                        MEMBER                  */
 	char *						name;
 
-	int							max_stocks;
+	unsigned					max_stocks;
     struct STOCK_HASHTABLE *    avail_stocks;   // Dynamically allocated
     unsigned                    n_stocks;
 
@@ -184,7 +184,7 @@ struct MarketList {
 struct MarketParam {
     char *						name;
 
-	int							max_stocks;
+	unsigned					max_stocks;
     struct STOCK_HASHTABLE *    avail_stocks;   // Dynamically allocated
     unsigned                    n_stocks;
 
@@ -246,7 +246,7 @@ struct LoanParam{
 
 // Market
 /*  TYPE                        MEMBER                  */
-    struct Market *             m_init(const char *name, const int max_stocks, const int u_speed);
+    struct Market *             m_init(const struct MarketParam *mpm);
     void                        m_display_ticker(const struct Market *m); // TODO: Add to event loop
     void                        m_add_stock(struct Market *m, struct Stock *stk);
     void                        m_remove_stock(struct Market *m, const char *sym);
@@ -263,7 +263,8 @@ struct LoanParam{
     struct MarketList *         ml_destroy(struct MarketList *ml);
 
 // MarketParam
-    struct MarketParam *        mpm_init();
+    struct MarketParam *        mpm_init(const char *name, const unsigned max_stocks, struct STOCK_HASHTABLE *avail_stocks,
+                                         const unsigned n_stocks, const int u_speed, bool is_open, struct Market *next);
     struct MarketParam *        mpm_destroy(struct MarketParam *mpm);
 
 // Stock

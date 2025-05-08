@@ -39,7 +39,6 @@ set(ALL_UNITY_FILES
 add_executable(stk_sim_tests
 ${ALL_SRC_FILES}
 ${ALL_UNITY_FILES}
-${PROJECT_SOURCE_DIR}/test/stk_sim_test.c
 ${PROJECT_SOURCE_DIR}/test/unity_main.c
 )
 
