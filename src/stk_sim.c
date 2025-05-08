@@ -37,7 +37,7 @@ double generate_value() {
 }
 
 char * strdup(const char *str) {
-    int buflen = strlen(str) + 1;
+    size_t buflen = strlen(str) + 1;
     char *new_str = (char *) malloc(buflen);
 
     if (new_str == NULL) {
