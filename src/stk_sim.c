@@ -1,6 +1,6 @@
 #include "stk_sim.h"
 
-struct MarketParam *mpm_init(const char *name, const unsigned max_stocks, struct STOCK_HASHTABLE *avail_stocks,
+struct MarketParam * mpm_init(const char *name, const unsigned max_stocks, struct STOCK_HASHTABLE *avail_stocks,
                              const unsigned n_stocks, const int u_speed, bool is_open, struct Market *next) {
     struct MarketParam *mpm = (struct MarketParam *) malloc(sizeof(struct MarketParam));
 
@@ -20,7 +20,7 @@ struct MarketParam *mpm_init(const char *name, const unsigned max_stocks, struct
     return mpm;
 }
 
-struct MarketParam *mpm_destroy(struct MarketParam *mpm) {
+struct MarketParam * mpm_destroy(struct MarketParam *mpm) {
     if (mpm == NULL) {
         print_err(ERR_FILE, "mpm_destroy(): MarketParam is NULL");
         return NULL;
