@@ -12,7 +12,7 @@ struct PFSTOCK_HASHTABLE {
 /*  TYPE                        MEMBER                  */
     struct PFSTOCK_HASHTABLE *  PFSTOCK_HASHTABLE_init(const unsigned capacity);
     unsigned                    PFSTOCK_HASHTABLE_hash(const char *stk_sym);
-    void                        PFSTOCK_HASHTABLE_insert(struct PFSTOCK_HASHTABLE *table, struct PortfolioStock *ps);
+    void                        PFSTOCK_HASHTABLE_insert(struct PFSTOCK_HASHTABLE *table, struct PortfolioStock *pfs);
     struct PortfolioStock *     PFSTOCK_HASHTABLE_find(struct PFSTOCK_HASHTABLE *table, const char *sym);
     void                        PFSTOCK_HASHTABLE_remove(struct PFSTOCK_HASHTABLE *table, const char *sym);
     struct PFSTOCK_HASHTABLE *  PFSTOCK_HASHTABLE_destroy(struct PFSTOCK_HASHTABLE *table);

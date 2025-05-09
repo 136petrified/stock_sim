@@ -35,7 +35,7 @@ struct LoanNode;
 struct LoanList;
 struct LoanParam;
 
-#include "stk_sim_psht.h"
+#include "stk_sim_pfsht.h"
 #include "stk_sim_stkht.h"
 
 /*                          CONSTANT                VALUE */
@@ -69,10 +69,17 @@ struct Wallet {
     unsigned                    loan_score;
 };
 
+struct WalletNode {
+/*  TYPE                        MEMBER                  */
+    struct Wallet *             data;
+    struct WalletNode *         next;
+};
+
 struct WalletList {
 /*  TYPE                        MEMBER                  */
-    struct Wallet *             head;
-    struct Wallet *             tail;
+    struct WalletNode *         head;
+    struct WalletNode *         tail;
+    int                         size;
 };
 
 struct WalletParam {
@@ -104,9 +111,15 @@ struct Stock {
     char *                      hist; // This is a file name!
 };
 
+struct StockNode {
+/*  TYPE                        MEMBER                  */
+    struct Stock *              data;
+    struct StockNode *          next;
+};
+
 struct StockList {
-    struct Stock *              head;
-    struct Stock *              tail;
+    struct StockNode *          head;
+    struct StockNode *          tail;
     int                         size;
 };
 
@@ -135,10 +148,16 @@ struct Portfolio {
     unsigned                    n_pfstocks;
 };
 
+struct PFNode {
+/*  TYPE                        MEMBER                  */
+    struct Portfolio *          data;
+    struct PFNode *             next;
+};
+
 struct PFList {
 /*  TYPE                        MEMBER                  */
-    struct Portfolio *          head;
-    struct Portfolio *          tail;
+    struct PFNode *             head;
+    struct PFNode *             tail;
     int                         size;
 };
 
@@ -168,10 +187,15 @@ struct Market {
     bool                        is_open; // if open
 };
 
+struct MarketNode {
+    struct Market *             data;
+    struct MarketNode *         next;
+};
+
 struct MarketList {
 /*  TYPE                        MEMBER                  */
-    struct Market *             head;
-    struct Market *             tail;
+    struct MarketNode *         head;
+    struct MarketNode *         tail;
     int                         size;
 };
 
@@ -198,16 +222,21 @@ struct Loan {
 
     unsigned                    req_score;
     time_t                      deadline;
-}
+};
+
+struct LoanNode {
+    struct Loan *               data;
+    struct LoanNode *           next;
+};
 
 struct LoanList {
 /*  TYPE                        MEMBER                  */
-    struct Loan *               head;
-    struct Loan *               tail;
+    struct LoanNode *           head;
+    struct LoanNode *           tail;
     int                         size;
 };
 
-struct LoanParam{
+struct LoanParam {
 /*  TYPE                        MEMBER                  */
     char *                      name;
 
@@ -224,6 +253,7 @@ struct LoanParam{
 // static struct MarketList markets;
 // static struct WalletList wallets;
 
+// TO-DO list
 // TODO: REDO .c
 // TODO: Add list insert/remove for lists
 // TODO: Hashtable implementation
@@ -242,18 +272,24 @@ struct LoanParam{
     struct Stock *              m_find_stock(const struct Market *m, const char *sym);
     struct Market *             m_destroy(struct Market *m);
 
+// MarketNode
+/*  TYPE                        MEMBER                  */
+    struct MarketNode *         mn_init(struct Market *m, struct MarketNode *next);
+    void                        mn_destroy(struct MarketNode *mn);
+
 // MarketList
 /*  TYPE                        MEMBER                  */
     struct MarketList *         ml_init();
 	void						ml_insert(struct MarketList *ml, struct Market *m);
-	struct MarketList *			ml_find(struct MarketList *ml, const char *name);
+	struct Market *			    ml_find(struct MarketList *ml, const char *name);
 	void						ml_remove(struct MarketList *ml, const char *name);
-    inline bool                 ml_is_empty(struct MarketList *ml) { return ml->size == 0; }
+    inline bool                 ml_is_empty(struct MarketList *ml) { return ml->size <= 0; }
+    inline int                  ml_size(struct MarketList *ml) { return ml->size; }
     struct MarketList *         ml_destroy(struct MarketList *ml);
 
 // MarketParam
     struct MarketParam *        mpm_init(const char *name, const unsigned max_stocks, struct STOCK_HASHTABLE *avail_stocks,
-                                         const unsigned n_stocks, const int u_speed, bool is_open, struct Market *next);
+                                         const unsigned n_stocks, const int u_speed, bool is_open);
     struct MarketParam *        mpm_destroy(struct MarketParam *mpm);
 
 // Stock
@@ -268,6 +304,11 @@ struct LoanParam{
     int                         s_good_event();
     void                        s_print();
     struct Stock *              s_destroy(struct Stock *stk);
+
+// StockNode
+/*  TYPE                        MEMBER                  */
+    struct Stock *              sn_init(struct Stock *stk, struct StockNode *next);
+    void                        sn_destroy(struct StockNode *sn);
 
 // StockList
 /*  TYPE                        MEMBER                  */
@@ -302,11 +343,19 @@ struct LoanParam{
     void                        w_update(struct Wallet *w, const struct WalletParam *wpm); // TODO: Implement this
     struct Wallet *             w_destroy(struct Wallet *w);
 
+// WalletNode
+/*  TYPE                        MEMBER                  */
+    struct WalletNode *         wn_init(struct Wallet *w, struct WalletNode *next);
+    void                        wn_destroy(struct WalletNode *wn);
+
 // WalletList
+/*  TYPE                        MEMBER                  */
     struct WalletList *         wl_init();
     void                        wl_insert(struct WalletList *wl, struct Wallet *w);
     struct Wallet *             wl_find(struct WalletList *wl, const char *name);
     void                        wl_remove(struct WalletList *wl, const char *name);
+    inline bool                 wl_is_empty(struct WalletList *wl) { return wl->size <= 0; }
+    inline int                  wl_size(struct WalletList *wl) { return wl->size; }
     struct WalletList *         wl_destroy(struct WalletList *wl);
 
 // WalletParam
@@ -327,21 +376,33 @@ struct LoanParam{
     struct Portfolio *          pf_destroy_stocks(struct Portfolio *pf);
     struct Portfolio *          pf_destroy(struct Portfolio *pf);
 
+// PortfolioNode
+/*  TYPE                        MEMBER                  */
+    struct PFNode *             pfn_init(struct Portfolio *pf, struct PFNode *next);
+    void                        pfn_destroy(struct PFNode *pfn);
+
 // PortfolioList
 /*  TYPE                        MEMBER                  */
     struct PFList *		        pfl_init();
     void                        pfl_insert(struct PFList *pfl, struct Portfolio *pf);
-    struct PortfolioStock *     pfl_find(struct PFList *pfl, const char *name);
-    void                        pfl_remove(struct PFList *pfl, const char *namw);
+    struct Portfolio *          pfl_find(struct PFList *pfl, const char *name);
+    void                        pfl_remove(struct PFList *pfl, const char *name);
+    inline bool                 pfl_is_empty(struct PFList *pfl) { return pfl->size <= 0; }
+    inline int                  pfl_size(struct PFList *pfl) { return pfl->size; }
     struct PFList *		        pfl_destroy(struct PFList *pfl);
 
 // PortfolioStock
 /*  TYPE                        MEMBER                  */
-    struct PortfolioStock *     ps_init(const char *name, const char *sym, const unsigned shares);
-    void                        ps_update(struct PortfolioStock *ps);
-    void                        ps_update_stock(struct PortfolioStock *ps_dest, 
-                                                const struct PortfolioStock *ps_src);
-    struct PortfolioStock *     ps_destroy(struct PortfolioStock *ps);
+    struct PortfolioStock *     pfs_init(const char *name, const char *sym, const unsigned shares);
+    void                        pfs_update(struct PortfolioStock *pfs);
+    void                        pfs_update_stock(struct PortfolioStock *pfs_dest, 
+                                                const struct PortfolioStock *pfs_src);
+    struct PortfolioStock *     pfs_destroy(struct PortfolioStock *pfs);
+
+// PFStockNode
+/*  TYPE                        MEMBER                  */
+    struct PFStockNode *        pfsn_init(struct PortfolioStock *pfs, struct PFStockNode *next);
+    void                        pfsn_destroy(struct PFStockNode *pfsn);
 
 // PFStockList
 /*  TYPE                        MEMBER                  */
@@ -349,6 +410,8 @@ struct LoanParam{
     void                        pfsl_insert(struct PFStockList *pfsl, struct PortfolioStock *pfs);
     struct PortfolioStock *     pfsl_find(struct PFStockList *pfsl, const char *sym);
     void                        pfsl_remove(struct PFStockList *pfsl, const char *sym);
+    inline bool                 pfsl_is_empty(struct PFStockList *pfsl) { return pfsl->size <= 0; }
+    inline int                  pfsl_size(struct PFStockList *pfsl) { return pfsl->size; }
 	struct PFStockList *		pfsl_destroy(struct PFStockList *pfsl);
 
 // Loan
@@ -360,12 +423,19 @@ struct LoanParam{
     inline unsigned             l_get_score_req(const struct Loan *l) { return l ? l->req_score : 0; }
     struct Loan *               l_destroy(struct Loan *l);
 
+// LoanNode
+/*  TYPE                        MEMBER                  */
+    struct LoanNode *           ln_init(struct Loan *l, struct LoanNode *next);
+    void                        ln_destroy(struct LoanNode *ln);
+
 // LoanList
 /*  TYPE                        MEMBER                  */
 	struct LoanList *           ll_init();
     void                        ll_insert(struct LoanList *ll, struct Loan *l);
     struct LoanList *           ll_find(struct LoanList *ll, const char *name);
     void                        ll_remove(struct LoanList *ll, const char *name);
+    inline bool                 ll_is_empty(struct LoanList *ll) { return ll->size <= 0; }
+    inline int                  ll_size(struct LoanList *ll) { return ll->size; }
 	struct LoanList *           ll_destroy(struct LoanList *ll);
 
 // LoanParam
