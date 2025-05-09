@@ -32,6 +32,46 @@ struct MarketParam * mpm_destroy(struct MarketParam *mpm) {
     return NULL;
 }
 
+struct StockParam * spm_init(const char *name, const char *sym, const char *sector,
+                             const double val, const int status, const unsigned n_avail_shares,
+                             const unsigned n_total_shares, const char *hist, struct Stock *next) {
+    struct StockParam *spm = (struct StockParam *) malloc(sizeof(struct StockParam));
+
+    if (spm == NULL) {
+        print_err(ERR_FILE, "spm_init(): malloc() failed");
+        return NULL;
+    }
+
+    spm->name           = strdup(name);
+    spm->sym            = strdup(sym);
+    spm->sector         = strdup(sector);
+    spm->val            = val;
+    spm->diff           = 0;
+    spm->percentage     = 0;
+    spm->n_avail_shares = n_avail_shares;
+    spm->n_total_shares = n_total_shares;
+    spm->hist           = strdup(hist);
+    spm->next           = NULL;
+
+    return spm;
+}
+
+struct StockParam * spm_destroy(const struct StockParam *spm) {
+    if (spm != NULL) {
+        print_err(ERR_FILE, "mpm_destroy(): StockParam is NULL");
+        return NULL;
+    }
+
+    free(spm->name);
+    free(spm->sym);
+    free(spm->sector);
+    free(spm->hist);
+
+    free(spm);
+
+    return NULL;
+}
+
 int s_bad_event() {
     return rand() % 67 == 0;
 }
