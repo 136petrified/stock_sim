@@ -26,8 +26,8 @@ set(ALL_SRC_FILES
     ${PROJECT_SOURCE_DIR}/src/stk_sim.c
     ${PROJECT_SOURCE_DIR}/src/stk_sim_stkht.h
     ${PROJECT_SOURCE_DIR}/src/stk_sim_stkht.c
-    ${PROJECT_SOURCE_DIR}/src/stk_sim_psht.h
-    ${PROJECT_SOURCE_DIR}/src/stk_sim_psht.c
+    ${PROJECT_SOURCE_DIR}/src/stk_sim_pfsht.h
+    ${PROJECT_SOURCE_DIR}/src/stk_sim_pfsht.c
 )
 
 set(ALL_UNITY_FILES
