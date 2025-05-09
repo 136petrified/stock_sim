@@ -15,7 +15,7 @@ struct MarketParam * mpm_init(const char *name, const unsigned max_stocks, struc
     mpm->n_stocks       = n_stocks;
     mpm->u_speed        = u_speed;
     mpm->is_open        = is_open;
-    mpm->next           = NULL;
+    mpm->next           = next;
 
     return mpm;
 }
@@ -33,7 +33,8 @@ struct MarketParam * mpm_destroy(struct MarketParam *mpm) {
 }
 
 struct StockParam * spm_init(const char *name, const char *sym, const char *sector,
-                             const double val, const int status, const unsigned n_avail_shares,
+                             const double val, const double diff, const double percentage, 
+                             const int status, const unsigned n_avail_shares,
                              const unsigned n_total_shares, const char *hist, struct Stock *next) {
     struct StockParam *spm = (struct StockParam *) malloc(sizeof(struct StockParam));
 
@@ -42,16 +43,16 @@ struct StockParam * spm_init(const char *name, const char *sym, const char *sect
         return NULL;
     }
 
-    spm->name           = strdup(name);
-    spm->sym            = strdup(sym);
-    spm->sector         = strdup(sector);
+    spm->name           = strdup(name);                 // Dynamically allocated, free required
+    spm->sym            = strdup(sym);                  // Dynamically allocated, free required
+    spm->sector         = strdup(sector);               // Dynamically allocated, free required
     spm->val            = val;
-    spm->diff           = 0;
-    spm->percentage     = 0;
+    spm->diff           = diff;
+    spm->percentage     = percentage;
     spm->n_avail_shares = n_avail_shares;
     spm->n_total_shares = n_total_shares;
-    spm->hist           = strdup(hist);
-    spm->next           = NULL;
+    spm->hist           = strdup(hist);                 // Dynamically allocated, free required
+    spm->next           = next;                         // No malloc done directly here, freed in WalletList
 
     return spm;
 }

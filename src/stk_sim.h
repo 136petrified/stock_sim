@@ -289,7 +289,10 @@ struct LoanParam{
 
 // StockParam
 /*  TYPE                        MEMBER                  */
-    struct StockParam *         spm_init();
+    struct StockParam *         spm_init(const char *name, const char *sym, const char *sector,
+                                         const double val,  
+                                         const int status, const unsigned n_avail_shares,
+                                         const unsigned n_total_shares, const char *hist, struct Stock *next);
     struct StockParam *         spm_destroy(struct StockParam *spm);
 
 // Wallet
@@ -319,7 +322,9 @@ struct LoanParam{
 
 // WalletParam
 /*  TYPE                        MEMBER                  */
-    struct WalletParam *        wpm_init();
+    struct WalletParam *        wpm_init(const char *name, const double bal, struct Portfolio *pf,
+                                         bool elligible_for_loan, struct LoanList *loans, const unsigned loan_score,
+                                         struct Wallet *next);
     struct WalletParam *        wpm_destroy(struct WalletParam *wpm);
 
 // Portfolio
@@ -363,6 +368,7 @@ struct LoanParam{
     struct Loan *               l_init(const unsigned total, const unsigned fulfilled, 
                                        const time_t deadline);
     void                        l_update(struct Loan *l);
+    static unsigned             l_calc_loan_score(struct Loan *l, struct Wallet *w);
     inline unsigned             l_get_score_req(const struct Loan *l) { return l ? l->req_score : 0; }
     struct Loan *               l_destroy(struct Loan *l);
 
