@@ -13,19 +13,25 @@
 /* Forward Declarations */
 
 struct Wallet;
+struct WalletNode;
 struct WalletList;
 struct WalletParam;
 struct Stock;
+struct StockNode;
 struct StockList;
 struct StockParam;
 struct Portfolio;
+struct PFNode;
 struct PFList;
 struct PortfolioStock;
-struct PFSTockList;
+struct PFStockNode;
+struct PFStockList;
 struct Market;
+struct MarketNode;
 struct MarketList;
 struct MarketParam;
 struct Loan;
+struct LoanNode;
 struct LoanList;
 struct LoanParam;
 
@@ -61,8 +67,6 @@ struct Wallet {
     bool                        elligible_for_loan;
     struct LoanList *           loans; // 3 loans maximum
     unsigned                    loan_score;
-
-    struct Wallet *             next;
 };
 
 struct WalletList {
@@ -80,8 +84,6 @@ struct WalletParam {
     bool                        elligible_for_loan;
     struct LoanList *           loans; // 3 loans maximum
     unsigned                    loan_score;
-
-    struct Wallet *             next;
 };
 
 
@@ -100,8 +102,6 @@ struct Stock {
     unsigned                    n_total_shares;
 
     char *                      hist; // This is a file name!
-
-    struct Stock *              next; // Linked list
 };
 
 struct StockList {
@@ -125,8 +125,6 @@ struct StockParam { // alias spm
     unsigned                    n_total_shares;
 
     char *                      hist; // This is a file name!
-
-    struct Stock *              next; // Linked list
 };
 
 struct Portfolio {
@@ -149,8 +147,6 @@ struct PortfolioStock {
     char *                      name;
     char *                      sym;
     unsigned                    owned_shares;
-
-    struct PortfolioStock *     next; // Linked list
 };
 
 struct PFStockList {
@@ -170,8 +166,6 @@ struct Market {
 
     int                         u_speed; // update speed
     bool                        is_open; // if open
-
-    struct Market *             next;
 };
 
 struct MarketList {
@@ -190,8 +184,6 @@ struct MarketParam {
 
     int                         u_speed; // update speed
     bool                        is_open; // if open
-
-    struct Market *             next;
 };
 
 struct Loan {
@@ -206,9 +198,7 @@ struct Loan {
 
     unsigned                    req_score;
     time_t                      deadline;
-
-    struct Loan *               next;
-};
+}
 
 struct LoanList {
 /*  TYPE                        MEMBER                  */
@@ -229,8 +219,6 @@ struct LoanParam{
 
     unsigned                    req_score;
     time_t                      deadline;
-
-    struct Loan *               next;
 };
 
 // static struct MarketList markets;
@@ -260,6 +248,7 @@ struct LoanParam{
 	void						ml_insert(struct MarketList *ml, struct Market *m);
 	struct MarketList *			ml_find(struct MarketList *ml, const char *name);
 	void						ml_remove(struct MarketList *ml, const char *name);
+    inline bool                 ml_is_empty(struct MarketList *ml) { return ml->size == 0; }
     struct MarketList *         ml_destroy(struct MarketList *ml);
 
 // MarketParam
@@ -270,7 +259,8 @@ struct LoanParam{
 // Stock
 /*  TYPE                        MEMBER                  */
     struct Stock *              s_init(const struct StockParam *spm);
-    int                         s_is_full();
+    bool                        s_is_empty();
+    bool                        s_is_full();
     void                        s_refresh(struct Stock *stk_dest, const struct Stock *stk_src);
     void                        s_update(struct Stock *stk_dest, const struct StockParam *spm);
     double                      s_get_percent(const double prev, const double curr);
@@ -290,9 +280,8 @@ struct LoanParam{
 // StockParam
 /*  TYPE                        MEMBER                  */
     struct StockParam *         spm_init(const char *name, const char *sym, const char *sector,
-                                         const double val,  
-                                         const int status, const unsigned n_avail_shares,
-                                         const unsigned n_total_shares, const char *hist, struct Stock *next);
+                                         const double val, const int status, const unsigned n_avail_shares,
+                                         const unsigned n_total_shares, const char *hist);
     struct StockParam *         spm_destroy(struct StockParam *spm);
 
 // Wallet
@@ -323,8 +312,7 @@ struct LoanParam{
 // WalletParam
 /*  TYPE                        MEMBER                  */
     struct WalletParam *        wpm_init(const char *name, const double bal, struct Portfolio *pf,
-                                         bool elligible_for_loan, struct LoanList *loans, const unsigned loan_score,
-                                         struct Wallet *next);
+                                         bool elligible_for_loan, struct LoanList *loans, const unsigned loan_score);
     struct WalletParam *        wpm_destroy(struct WalletParam *wpm);
 
 // Portfolio

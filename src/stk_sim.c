@@ -28,9 +28,8 @@ struct MarketList * ml_destroy(struct MarketList *ml) {
     return NULL;                // to prevent dangling pointer
 }
 
-
 struct MarketParam * mpm_init(const char *name, const unsigned max_stocks, struct STOCK_HASHTABLE *avail_stocks,
-                             const unsigned n_stocks, const int u_speed, bool is_open, struct Market *next) {
+                             const unsigned n_stocks, const int u_speed, bool is_open) {
     struct MarketParam *mpm = (struct MarketParam *) malloc(sizeof(struct MarketParam));
 
     if (mpm == NULL) {
@@ -44,7 +43,6 @@ struct MarketParam * mpm_init(const char *name, const unsigned max_stocks, struc
     mpm->n_stocks       = n_stocks;
     mpm->u_speed        = u_speed;
     mpm->is_open        = is_open;
-    mpm->next           = next;
 
     return mpm;
 }
@@ -64,7 +62,7 @@ struct MarketParam * mpm_destroy(struct MarketParam *mpm) {
 struct StockParam * spm_init(const char *name, const char *sym, const char *sector,
                              const double val, const double diff, const double percentage, 
                              const int status, const unsigned n_avail_shares,
-                             const unsigned n_total_shares, const char *hist, struct Stock *next) {
+                             const unsigned n_total_shares, const char *hist) {
     struct StockParam *spm = (struct StockParam *) malloc(sizeof(struct StockParam));
 
     if (spm == NULL) {
@@ -81,7 +79,6 @@ struct StockParam * spm_init(const char *name, const char *sym, const char *sect
     spm->n_avail_shares = n_avail_shares;
     spm->n_total_shares = n_total_shares;
     spm->hist           = strdup(hist);                 // Dynamically allocated, free required
-    spm->next           = next;                         // No malloc done directly here, freed in WalletList
 
     return spm;
 }
