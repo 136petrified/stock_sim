@@ -1,5 +1,34 @@
 #include "stk_sim.h"
 
+struct MarketList * ml_init() {
+    struct MarketList *ml = (struct MarketList *) malloc(sizeof(struct MarketList));
+
+    ml->head = NULL;
+    ml->tail = NULL;
+    ml->size = 0;
+
+    return ml;
+}
+
+struct MarketList * ml_destroy(struct MarketList *ml) {
+    if (ml == NULL) {
+        print_err(ERR_FILE, "ml_destroy(): MarketList is NULL");
+        return NULL;
+    }
+
+    struct Market *target;
+    struct Market *curr = ml->head;
+
+    while (curr != NULL) {
+        target = curr;
+        curr   = curr->next;
+        free(target);
+    }
+
+    return NULL;                // to prevent dangling pointer
+}
+
+
 struct MarketParam * mpm_init(const char *name, const unsigned max_stocks, struct STOCK_HASHTABLE *avail_stocks,
                              const unsigned n_stocks, const int u_speed, bool is_open, struct Market *next) {
     struct MarketParam *mpm = (struct MarketParam *) malloc(sizeof(struct MarketParam));

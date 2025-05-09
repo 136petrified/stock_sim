@@ -238,9 +238,9 @@ struct LoanParam{
 
 // TODO: REDO .c
 // TODO: Add list insert/remove for lists
+// TODO: Hashtable implementation
 // TODO: Update all init() funcs
 // TODO: Look into spaCy and NLTK for sentiment-based changes
-// TODO: Param structs
 // TODO: Look into GUI for ticker, React for iOS, Android? Also webservers + API
 // TODO: Loan scoring system, loan overhaul, overhaul bad / good events
 
