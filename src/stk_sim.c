@@ -3,6 +3,11 @@
 struct MarketNode * mn_init(struct Market *m, struct MarketNode *next) {
     struct MarketNode *mn = (struct MarketNode *) malloc(sizeof(struct MarketNode));
 
+    if (mn == NULL) {
+        print_err(ERR_FILE, "mn_init(): malloc() failed");
+        return;
+    }
+
     mn->data = m;
     mn->next = next;
 
