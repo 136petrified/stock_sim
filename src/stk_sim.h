@@ -255,12 +255,14 @@ struct LoanParam {
 
 // TO-DO list
 // TODO: REDO .c
-// TODO: Add list insert/remove for lists
+// TODO: Input/output system (load / export)
+// TODO: Add list sorting (sort)
 // TODO: Hashtable implementation
 // TODO: Update all init() funcs
 // TODO: Look into spaCy and NLTK for sentiment-based changes
 // TODO: Look into GUI for ticker, React for iOS, Android? Also webservers + API
 // TODO: Loan scoring system, loan overhaul, overhaul bad / good events
+// TODO: Add clear() function to lists (destroy without deleting list)
 
 // Market
 /*  TYPE                        MEMBER                  */
@@ -285,6 +287,7 @@ struct LoanParam {
 	void						ml_remove(struct MarketList *ml, const char *name);
     inline bool                 ml_is_empty(struct MarketList *ml) { return ml->size <= 0; }
     inline int                  ml_size(struct MarketList *ml) { return ml->size; }
+    void                        ml_clear(struct MarketList *ml);
     struct MarketList *         ml_destroy(struct MarketList *ml);
 
 // MarketParam
@@ -316,6 +319,9 @@ struct LoanParam {
     void                        sl_insert(struct StockList *sl, struct Stock *stk);
     struct Stock *              sl_find(struct StockList *sl, const char *sym);
     void                        sl_remove(struct StockList *sl, const char *sym);
+    inline bool                 sl_is_empty(struct StockList *sl) { return sl->size <= 0; }
+    inline int                  sl_size(struct StockList *sl) { return sl->size; }
+    void                        sl_clear(struct StockList *sl);
     struct StockList *          sl_destroy(struct StockList *sl);
 
 // StockParam
@@ -356,6 +362,7 @@ struct LoanParam {
     void                        wl_remove(struct WalletList *wl, const char *name);
     inline bool                 wl_is_empty(struct WalletList *wl) { return wl->size <= 0; }
     inline int                  wl_size(struct WalletList *wl) { return wl->size; }
+    void                        wl_clear(struct WalletList *wl);
     struct WalletList *         wl_destroy(struct WalletList *wl);
 
 // WalletParam
@@ -389,6 +396,7 @@ struct LoanParam {
     void                        pfl_remove(struct PFList *pfl, const char *name);
     inline bool                 pfl_is_empty(struct PFList *pfl) { return pfl->size <= 0; }
     inline int                  pfl_size(struct PFList *pfl) { return pfl->size; }
+    void                        pfl_clear(struct PFList *ml);
     struct PFList *		        pfl_destroy(struct PFList *pfl);
 
 // PortfolioStock
@@ -412,6 +420,7 @@ struct LoanParam {
     void                        pfsl_remove(struct PFStockList *pfsl, const char *sym);
     inline bool                 pfsl_is_empty(struct PFStockList *pfsl) { return pfsl->size <= 0; }
     inline int                  pfsl_size(struct PFStockList *pfsl) { return pfsl->size; }
+    void                        pfsl_clear(struct PFStockList *pfsl);
 	struct PFStockList *		pfsl_destroy(struct PFStockList *pfsl);
 
 // Loan
@@ -432,10 +441,11 @@ struct LoanParam {
 /*  TYPE                        MEMBER                  */
 	struct LoanList *           ll_init();
     void                        ll_insert(struct LoanList *ll, struct Loan *l);
-    struct LoanList *           ll_find(struct LoanList *ll, const char *name);
+    struct Loan *               ll_find(struct LoanList *ll, const char *name);
     void                        ll_remove(struct LoanList *ll, const char *name);
     inline bool                 ll_is_empty(struct LoanList *ll) { return ll->size <= 0; }
     inline int                  ll_size(struct LoanList *ll) { return ll->size; }
+    void                        ll_clear(struct LoanList *ll);
 	struct LoanList *           ll_destroy(struct LoanList *ll);
 
 // LoanParam

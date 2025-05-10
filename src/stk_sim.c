@@ -1,9 +1,94 @@
 #include "stk_sim.h"
 
+struct MarketNode * mn_init(struct Market *m, struct MarketNode *next) {
+    struct MarketNode *mn = (struct MarketNode *) malloc(sizeof(struct MarketNode));
+
+    mn->data = m;
+    mn->next = next;
+
+    return mn;
+}
+
+void mn_destroy(struct MarketNode *mn) {
+    if (mn == NULL) {
+        print_err(ERR_FILE, "mn_destroy(): mn is NULL");
+        return;
+    }
+
+    mn->data = m_destroy(mn->data); // Handle mn->data with other destructor
+    free(mn);
+}
+
 struct MarketList * ml_init() {
+    struct MarketList *ml = (struct MarketList *) malloc(sizeof(struct MarketList));
+    if (ml == NULL) {
+        print_err(ERR_FILE, "ml_init(): malloc() failed");
+        return NULL;
+    }
+
+    ml->head = ml->tail = NULL;
+
+    return ml;
+}
+
+void ml_insert(struct MarketList *ml, struct Market *m) {
+    ml->head = mn_init(m, ml->head);
+}
+
+struct Market * ml_find(struct MarketList *ml, const char *name) {
+    if (ml == NULL)
+        return NULL;
+
+    for (struct MarketNode *curr = ml->head; curr != NULL; curr = curr->next) {
+        if (name == curr->data->name)
+            return curr->data;
+    }
+
+    return NULL;
+}
+
+void ml_remove(struct MarketList *ml, const char *name) {
+    struct MarketNode *target;
+
+    if (ml == NULL) {
+        print_err(ERR_FILE, "ml_remove(): ml is NULL");
+        return;
+    } else if (strcmp(name, ml->head->data->name) == 0) {
+        target = ml->head;
+        ml->head = ml->head->next;
+        target->data = m_destroy(
+        free(target);
+
+        return;
+    }
+
+    struct MarketNode *curr = ml->head->next;
+    struct MarketNode *prev = ml->head;
+
+    for (; curr != NULL; curr = curr->next) {
+        if (strcmp(name, ml->head->data->name) == 0) {
+            target = curr;
+
+        }
+    }
 }
 
 struct MarketList * ml_destroy(struct MarketList *ml) {
+    if (ml == NULL) {
+        print_err(ERR_FILE, "ml_destroy: ml is NULL");
+        return NULL;
+    }
+
+    struct MarketNode *target;
+    struct MarketNode *curr = ml;
+
+    while (curr != NULL) {
+        target = curr;
+        curr   = curr->next;
+        free(target);
+    }
+
+    return NULL;
 }
 
 struct MarketParam * mpm_init(const char *name, const unsigned max_stocks, struct STOCK_HASHTABLE *avail_stocks,
