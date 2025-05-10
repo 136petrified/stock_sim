@@ -61,8 +61,9 @@ void ml_remove(struct MarketList *ml, const char *name) {
     } else if (strcmp(name, ml->head->data->name) == 0) {
         target = ml->head;
         ml->head = ml->head->next;
-        target->data = m_destroy(
+        target->data = m_destroy(target->data);
         free(target);
+        --ml->size;
 
         return;
     }
