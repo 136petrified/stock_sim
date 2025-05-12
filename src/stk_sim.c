@@ -74,14 +74,37 @@ void ml_remove(struct MarketList *ml, const char *name) {
     for (; curr != NULL; curr = curr->next) {
         if (strcmp(name, ml->head->data->name) == 0) {
             target = curr;
-
+	    prev->next = curr->next;
+	    delete target;
+	    --ml->size;
+	    return;
         }
     }
 }
 
+void ml_clear(struct MarketList *ml) {
+    if (ml == NULL) {
+	print_err(ERR_FILE, "ml_clear(): ml is NULL");
+	return;
+    }
+
+    struct MarketNode *target;
+    struct MarketNode *curr = ml;
+
+    while (curr != NULL) {
+	target = curr;
+	curr   = curr->next;
+	free(target);
+    }
+
+    ml->head = ml->tail = NULL;
+
+    ml->size = 0;
+}
+
 struct MarketList * ml_destroy(struct MarketList *ml) {
     if (ml == NULL) {
-        print_err(ERR_FILE, "ml_destroy: ml is NULL");
+        print_err(ERR_FILE, "ml_destroy(): ml is NULL");
         return NULL;
     }
 
@@ -91,8 +114,11 @@ struct MarketList * ml_destroy(struct MarketList *ml) {
     while (curr != NULL) {
         target = curr;
         curr   = curr->next;
+	m_destroy(target->data); // Destroy the data in the node as well
         free(target);
     }
+
+    free(ml);
 
     return NULL;
 }
