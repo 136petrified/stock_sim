@@ -178,6 +178,13 @@ struct StockParam * spm_init(const char *name, const char *sym, const char *sect
     return spm;
 }
 
+struct StockList * sl_init() {
+	struct StockList *sl = (struct StockList *) malloc (sizeof(struct StockList));
+
+	sl->head = sl->tail = NULL;
+	return sl;
+}
+
 struct StockParam * spm_destroy(const struct StockParam *spm) {
     if (spm != NULL) {
         print_err(ERR_FILE, "mpm_destroy(): StockParam is NULL");
