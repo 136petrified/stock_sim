@@ -200,9 +200,9 @@ struct MarketList {
 };
 
 struct MarketParam {
-    char *						name;
+    char *			name;
 
-	unsigned					max_stocks;
+    unsigned			max_stocks;
     struct STOCK_HASHTABLE *    avail_stocks;   // Dynamically allocated
     unsigned                    n_stocks;
 
